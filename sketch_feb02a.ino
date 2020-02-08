@@ -1,22 +1,26 @@
 #define BUF_WIDTH 30
 #define newline Serial.print('\n')
 
+//Array 'input' holds the string taken from the serial buffer '
+//'Holder' contains three strings, one for the operation and two for the operands.
 char input[BUF_WIDTH], holder[3][BUF_WIDTH];
 
+//Calling 'reset()' anywhere in the program software resets the microcontroller.
 void(* reset) (void) = 0;
 
-void setup() {
-  // put your setup code here, to run once:
+void setup() 
+{
   Serial.begin(9600);
-  Serial.print("Railgun Mk.II Computer System V3");
+  Serial.print("Simple Arduino CLI");
   newline;
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
+void loop() 
+{
   handleMenu();
 }
 
+//'tokenize()' separates the operation and operands and puts them in 'holder'.
 void tokenize(char string[BUF_WIDTH])
 {
   char * valPosition = strtok(string, " ");
@@ -30,6 +34,7 @@ void tokenize(char string[BUF_WIDTH])
   }
 }
 
+//'interpret' reads the operation and acts on the operands
 void interpret(char opcode[BUF_WIDTH], int operandOne, int operandTwo)
 {
   if (strcmp(opcode, "digitalWrite") == 0)
@@ -108,6 +113,7 @@ void interpret(char opcode[BUF_WIDTH], int operandOne, int operandTwo)
   }
 }
 
+//'getString(array)' reads a string from the serial monitor and put it in 'array'.
 void getString(char output[BUF_WIDTH])
 {
   while (!Serial.available());
@@ -116,6 +122,7 @@ void getString(char output[BUF_WIDTH])
   in.toCharArray(output, BUF_WIDTH);
 }
 
+//'handleMenu()' handles the initial menu.
 void handleMenu()
 {
   Serial.print(">> ");
@@ -128,6 +135,7 @@ void handleMenu()
     reset();
   }
 
+  //Typing 'time' into the serial monitor displays the time in seconds since the processor was last reset.
   else if (strcmp(input, "time") == 0)
   {
     Serial.print(millis() / 1000);
@@ -135,14 +143,10 @@ void handleMenu()
     newline;
   }
 
+  //Type 'int' to enter the interpreter.
   else if (strcmp(input, "int") == 0)
   {
     handleInterpreter();
-  }
-
-  else if (strcmp(input, "script") == 0)
-  {
-    handleScript();
   }
 
   else
@@ -163,19 +167,5 @@ void handleInterpreter()
     newline;
     tokenize(input);
     interpret(holder[0], atoi(holder[1]), atoi(holder[2]));
-  }
-}
-
-void handleScript()
-{
-  strcpy(input, '\0');
-  int i = 0;
-  while (strcmp(input, "finished") != 0)
-  {
-    Serial.print(": ");
-    getString(input);
-    Serial.print(input);
-    tokenize(input);
-    newline;
   }
 }
