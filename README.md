@@ -4,6 +4,7 @@ Initially, the processor is in 'menu' mode, which allows for the following comma
 1. reset - software resets the processor.
 2. time - prints the seconds since the processor was last reset to the serial monitor.
 3. int - enters the interpreter.
+
 The interpreter has the following commands:
 1. digitalWrite <pin> <state> - writes 'pin' to 'state' 0 or 1.
 2. digitalRead <pin> - prints the value of 'pin' to the serial monitor.
